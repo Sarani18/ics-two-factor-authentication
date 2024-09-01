@@ -1,0 +1,6 @@
+Flask
+Flask-MySQLdb
+flask-bcrypt
+pyotp
+qrcode
+pillow

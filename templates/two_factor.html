@@ -1,0 +1,33 @@
+<!-- templates/two_factor.html -->
+
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+        {% if not session.get('authenticated') %}
+            {% if session.get('otp_verification_failed') %}
+                <h2>Invalid OTP</h2>
+                <p>The OTP you entered is incorrect. Please try again.</p>
+            {% elif session.get('otp_secret') %}
+                <h2>Two-Factor Authentication Setup</h2>
+                <p>Scan the QR code below with your authenticator app.</p>
+                <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
+                <p>If you cannot scan the QR code, enter the following code manually:</p>
+                <code>{{ session['otp_secret'] }}</code>
+                <p>After scanning, enter the OTP below:</p>
+            {% endif %}
+            <h2>Enter OTP</h2>
+            <form method="POST" action="{{ url_for('two_factor') }}">
+                <div class="mb-3">
+                    <label for="otp" class="form-label">One-Time Password</label>
+                    <input type="text" class="form-control" id="otp" name="otp" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Verify</button>
+            </form>
+        {% else %}
+            <h2>You are already authenticated.</h2>
+            <p>Proceed to the <a href="{{ url_for('dashboard') }}">dashboard</a>.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
